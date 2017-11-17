@@ -5,13 +5,17 @@ if [[ "$ALPHATWIRL_NANOAOD_ROOT" == .* ]];then
 fi
 
 # Wrap all the nanoAOD output with a prefix
-(
+ECHO="$(which echo)"
+function echo(){
+  $ECHO "NanoAOD-tools:" $@
+}
 if [ ! -d $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/build ];then
-    bash $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh build
+    (
+    source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh build
+    )
 fi
 source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh
-) 2>&1 |while read line; do
-    echo NanoAOD-tools: $line
-done
 
+unset echo
+unset ECHO
 export PYTHONPATH="${ALPHATWIRL_NANOAOD_ROOT}/alphatwirl_nanoaod/${PYTHONPATH:+:${PYTHONPATH}}"
