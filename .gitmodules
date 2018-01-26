@@ -1,3 +1,6 @@
 [submodule "externals/nanoAOD-tools"]
 	path = externals/nanoAOD-tools
 	url = git@github.com:cms-nanoAOD/nanoAOD-tools.git
+[submodule "externals/alphatwirl"]
+	path = externals/alphatwirl
+	url = git@github.com:alphatwirl/alphatwirl.git
