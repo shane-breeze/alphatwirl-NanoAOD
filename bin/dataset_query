@@ -1,0 +1,17 @@
+#!/usr/bin/env python
+import os
+import click
+import alphatwirl_nanoaod.generate_inputs.dataset_query as dq
+
+@click.command()
+@click.argument("dataset-query")
+
+def main(**kwargs):
+    """
+    Generate the dataframe with the dataset info.
+    """
+
+    dq.main(**kwargs)
+
+if __name__ == "__main__":
+    main()
