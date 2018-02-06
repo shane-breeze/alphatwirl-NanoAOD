@@ -4,3 +4,6 @@
 [submodule "externals/alphatwirl"]
 	path = externals/alphatwirl
 	url = git@github.com:alphatwirl/alphatwirl.git
+[submodule "externals/alphatwirl-interface"]
+	path = externals/alphatwirl-interface
+	url = git@github.com:alphatwirl/alphatwirl-interface.git
