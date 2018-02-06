@@ -11,12 +11,9 @@ import alphatwirl_nanoaod.generate_inputs.dataset_query as dq
         help="Instance to be passed to the dasgoclient query")
 
 def main(**kwargs):
-    """
-    Generate the dataframe with the dataset info.
-    """
+    """Generate the dataframe with the dataset info"""
 
-    df = dq.main(**kwargs)
-    print df
+    dq.main(**kwargs)
 
 if __name__ == "__main__":
     main()
