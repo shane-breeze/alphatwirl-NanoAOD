@@ -11,6 +11,8 @@ import alphatwirl_nanoaod.read_trees as t2df
         help="Limit the number of events per dataset")
 @click.option("-N", "--events-per-process", default=-1, type=int,
         help="Limit the number of events per process (condor job)")
+@click.option("--n-files", default=1, type=int,
+        help="Number of files per run")
 @click.option('--components', default="all",
         help="Select which NanoAOD components to read."
              "Use 'all' to read everything")

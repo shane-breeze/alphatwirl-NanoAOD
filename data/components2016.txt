@@ -1,6 +1,6 @@
    EventType         Dataset                         Era
 0       Data             MET  Run2016B-03Feb2017_ver1-v1
-# 1       Data             MET  Run2016B-03Feb2017_ver2-v2
+1       Data             MET  Run2016B-03Feb2017_ver2-v2
 # 2       Data             MET       Run2016C-03Feb2017-v1
 # 3       Data             MET       Run2016D-03Feb2017-v1
 # 4       Data             MET       Run2016E-03Feb2017-v1

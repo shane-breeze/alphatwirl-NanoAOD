@@ -28,7 +28,7 @@ class WithInsertTableFileNameComposer():
 
 
 def main(out_dir, in_path, mode, components, events_per_dataset=-1,
-         events_per_process=-1, ncores=4):
+         events_per_process=-1, n_files=1, ncores=4):
 
     # Prepare the run manager
     user_modules=["alphatwirl_nanoaod"]
@@ -36,6 +36,7 @@ def main(out_dir, in_path, mode, components, events_per_dataset=-1,
                             user_modules=user_modules, quiet=False,
                             max_events_per_dataset=events_per_dataset,
                             max_events_per_process=events_per_process,
+                            max_files_per_run=n_files,
                             n_processes=ncores)
 
     # Choose components
