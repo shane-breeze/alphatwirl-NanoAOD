@@ -5,13 +5,18 @@ import alphatwirl_nanoaod.generate_inputs.dataset_query as dq
 
 @click.command()
 @click.argument("dataset-query")
+@click.option("-o", "--out_file", default=os.path.join(os.getcwd(), "data/datasets.txt"),
+        help="The path to an output file. If it already exists, will append to this file.")
+@click.option("-i", "--instance", default="prod/global",
+        help="Instance to be passed to the dasgoclient query")
 
 def main(**kwargs):
     """
     Generate the dataframe with the dataset info.
     """
 
-    dq.main(**kwargs)
+    df = dq.main(**kwargs)
+    print df
 
 if __name__ == "__main__":
     main()
