@@ -1,10 +1,14 @@
+from alphatwirl.loop import NullCollector
 from alphatwirl.configure import TableConfigCompleter, TableFileNameComposer
 from alphatwirl_interface.completions import complete
 from alphatwirl_interface.nanoaod.runners import  build_job_manager
 
+from scribblers.in_certified_lumi_sections import in_certified_lumi_sections
+
 from cut_flow import cut_flow
 from df_builder import prepare_dataframe_configs
 
+import os
 import pprint
 import logging
 logger = logging.getLogger(__name__)
@@ -27,24 +31,29 @@ class WithInsertTableFileNameComposer():
         return self.composer(columnNames, **kwargs)
 
 
-def main(out_dir, in_path, mode, components, events_per_dataset=-1,
-         events_per_process=-1, n_files=1, ncores=4):
+def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//",
+         events_per_dataset=-1, events_per_process=-1, n_files=1, ncores=4):
 
     # Prepare the run manager
     user_modules=["alphatwirl_nanoaod"]
-    mgr = build_job_manager(out_dir, in_path, parallel_mode=mode, force=True,
-                            user_modules=user_modules, quiet=False,
+    mgr = build_job_manager(out_dir, parallel_mode=mode, force=True,
+                            user_modules=user_modules, quiet=True,
                             max_events_per_dataset=events_per_dataset,
                             max_events_per_process=events_per_process,
                             max_files_per_run=n_files,
                             n_processes=ncores)
 
     # Choose components
-    components_df = pd.read_table("data/components2016.txt", sep='\s+', comment='#')
-    components_df = components_df[components_df["Dataset"].isin(components)]
+    components_df = pd.read_table("data/components2016.csv",sep='\t',index_col=0,comment='#')
+    components_df["files"] = components_df["files"].apply(
+            lambda fs: [f if "/store/"!=f[:7] else xrd_redirector+f for f in eval(fs)]
+            )
 
     # Setup scribblers
-    scribblers = []
+    json_path = os.path.join(os.getcwd(), "data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
+    scribblers = [
+            in_certified_lumi_sections(json_path),
+            ]
 
     # Prepare the event selection
     event_selection = cut_flow(out_dir)
@@ -76,7 +85,7 @@ def summarize(out_dir, mgr, df_cfg, event_selection, scribblers, components_df):
         :param components_df: list of nanoaod component names to summarize
     '''
 
-    reader_collector_pairs = scribblers + event_selection
+    reader_collector_pairs = [(s,NullCollector()) for s in scribblers] + event_selection
     name_composer = WithInsertTableFileNameComposer(TableFileNameComposer(),
                                                     df_cfg.keys())
 

@@ -6,8 +6,9 @@ import os
 from alphatwirl_interface.cut_flows import cut_flow_with_counter
 
 baseline_selection = dict(All = (
-        'ev: ev.nJet[0] >= 1',
-        'ev: ev.Jet_pt[0] >= 100.',
+        'ev: ev.inCertifiedLumiSections[0]',
+        #'ev: ev.nJet[0] >= 1',
+        #'ev: ev.Jet_pt[0] >= 100.',
     ))
 
 def cut_flow(output_directory=None, cut_flow_filename="cut_flow_table.txt"):
