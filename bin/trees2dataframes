@@ -20,6 +20,8 @@ import alphatwirl_nanoaod.read_trees as t2df
         help="Choose which parallel mode to run in")
 @click.option('--ncores', default=4,
         help="Choose the number of cores to run on in multiprocessing mode")
+@click.option('--quiet/--loud', default=False,
+        help="Progress bar? Default is to have one")
 
 def main(**kwargs):
     """

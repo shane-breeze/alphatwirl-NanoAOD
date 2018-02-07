@@ -4,6 +4,7 @@ from alphatwirl_interface.completions import complete
 from alphatwirl_interface.nanoaod.runners import  build_job_manager
 
 from scribblers.in_certified_lumi_sections import in_certified_lumi_sections
+from scribblers.jec_uncert_wrapper import nanoaodtools_module_wrapper
 
 from cut_flow import cut_flow
 from df_builder import prepare_dataframe_configs
@@ -32,12 +33,13 @@ class WithInsertTableFileNameComposer():
 
 
 def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//",
-         events_per_dataset=-1, events_per_process=-1, n_files=1, ncores=4):
+         events_per_dataset=-1, events_per_process=-1, n_files=1, ncores=4,
+         quiet=False):
 
     # Prepare the run manager
     user_modules=["alphatwirl_nanoaod"]
     mgr = build_job_manager(out_dir, parallel_mode=mode, force=True,
-                            user_modules=user_modules, quiet=True,
+                            user_modules=user_modules, quiet=quiet,
                             max_events_per_dataset=events_per_dataset,
                             max_events_per_process=events_per_process,
                             max_files_per_run=n_files,
@@ -53,6 +55,7 @@ def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//"
     json_path = os.path.join(os.getcwd(), "data/Cert_271036-284044_13TeV_23Sep2016ReReco_Collisions16_JSON.txt")
     scribblers = [
             in_certified_lumi_sections(json_path),
+            nanoaodtools_module_wrapper("Summer16_23Sep2016V4_MC"),
             ]
 
     # Prepare the event selection

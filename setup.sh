@@ -1,26 +1,24 @@
-# export PYTHONPATH=$PYTHONPATH:externals/alphatwirl:externals/alphatwirl-interface
-# 
-# # Set up the python path and source the nanoAOD stand-alone scripts
-# export ALPHATWIRL_NANOAOD_ROOT="$(dirname $BASH_SOURCE)"
-# if [[ "$ALPHATWIRL_NANOAOD_ROOT" == .* ]];then
-#     ALPHATWIRL_NANOAOD_ROOT="$PWD${ALPHATWIRL_NANOAOD_ROOT/.}"
-# fi
-# 
-# # Wrap all the nanoAOD output with a prefix
-# ECHO="$(which echo)"
-# function echo(){
-#   $ECHO "NanoAOD-tools:" $@
-# }
-# if [ ! -d $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/build ];then
-#     (
-#     source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh build
-#     )
-# fi
-# source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh
-# 
-# unset echo
-# unset ECHO
-# export PYTHONPATH="${ALPHATWIRL_NANOAOD_ROOT}/alphatwirl_nanoaod/${PYTHONPATH:+:${PYTHONPATH}}"
+# Set up the python path and source the nanoAOD stand-alone scripts
+export ALPHATWIRL_NANOAOD_ROOT="$(dirname $BASH_SOURCE)"
+if [[ "$ALPHATWIRL_NANOAOD_ROOT" == .* ]];then
+    ALPHATWIRL_NANOAOD_ROOT="$PWD${ALPHATWIRL_NANOAOD_ROOT/.}"
+fi
+
+# Wrap all the nanoAOD output with a prefix
+ECHO="$(which echo)"
+function echo(){
+  $ECHO "NanoAOD-tools:" $@
+}
+if [ ! -d $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/build ];then
+    (
+    source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh build
+    )
+fi
+source $ALPHATWIRL_NANOAOD_ROOT/externals/nanoAOD-tools/standalone/env_standalone.sh
+
+unset echo
+unset ECHO
+export PYTHONPATH="${ALPHATWIRL_NANOAOD_ROOT}/alphatwirl_nanoaod/${PYTHONPATH:+:${PYTHONPATH}}"
 
 Fast_cvmfs_PythonDir=/cvmfs/sft.cern.ch/lcg/releases/Python/2.7.13-597a5/x86_64-slc6-gcc62-opt/
 Fast_cvmfs_PipDir=/cvmfs/sft.cern.ch/lcg/releases/pip/8.1.2-c9f5a/x86_64-slc6-gcc62-opt/
@@ -63,7 +61,7 @@ FAST_build_path(){
 }
 
 FAST_build_python_path(){
-  local Dirs=( "${FAST_RA1_ROOT}" "${FAST_RA1_EXTERNALS_DIR}"/{alphatwirl,alphatwirl-interface,aggregate,pip/lib/python2.7/site-packages} )
+  local Dirs=( "${FAST_RA1_ROOT}" "${FAST_RA1_EXTERNALS_DIR}"/{alphatwirl,alphatwirl-interface,nanoAOD-tools/python,aggregate,pip/lib/python2.7/site-packages} )
   Dirs+=( {"$Fast_cvmfs_PythonDir","$Fast_cvmfs_PipDir"}/lib/python2.7/site-packages/)
 
   FAST_build_some_path "$PYTHONPATH" "${Dirs[@]}"
