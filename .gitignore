@@ -1,5 +1,6 @@
 # Repo specific
 output/
+_ccsp_temp/
 
 ### Python
 # Byte-compiled / optimized / DLL files
