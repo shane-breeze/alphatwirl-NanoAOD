@@ -4,7 +4,6 @@ import click
 import alphatwirl_nanoaod.read_trees as t2df
 
 @click.command()
-@click.argument("in_path")
 @click.option("-o", "--out_dir", default=os.path.join(os.getcwd(), "output"),
         help="The path to an output directory, which should exist")
 @click.option("-n", "--events-per-dataset", default=-1, type=int,
@@ -13,9 +12,10 @@ import alphatwirl_nanoaod.read_trees as t2df
         help="Limit the number of events per process (condor job)")
 @click.option("--n-files", default=1, type=int,
         help="Number of files per run")
-@click.option('--components', default="all",
-        help="Select which NanoAOD components to read."
-             "Use 'all' to read everything")
+@click.option('--components', default="data/components2016.csv",
+        help="Select which components dataframe (in text file format) to read.")
+@click.option('--xrd-redirector', default="root://xrootd-cms.infn.it//",
+        help="xrootd redirector to use if the file path starts with /store/")
 @click.option('--mode', default="multiprocessing",
         help="Choose which parallel mode to run in")
 @click.option('--ncores', default=4,
@@ -27,8 +27,6 @@ def main(**kwargs):
     Makes the first set of dataframes for the analysis chain.
     """
 
-    if "components" in kwargs:
-        kwargs["components"] = kwargs["components"].split()
     t2df.main(**kwargs)
 
 if __name__ == "__main__":
