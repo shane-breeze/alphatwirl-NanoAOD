@@ -1,14 +1,15 @@
-from postprocessing.modules.jme.jecUncertainties import jecUncertProducer
+import sys
+import os
+import importlib
 
 ##__________________________________________________________________||
-class event_wrapper(object):
+class EventWrapper(object):
     def __init__(self, event):
-        # can't assign it as an attribute because I'm reassigning the
-        # __getattr__ member function -> self.event would give an infinite loop
-        # there
         self.__dict__["event"] = event
 
     def __getattr__(self, attr):
+        if attr.startswith("__"):
+            raise AttributeError(attr)
         val = getattr(self.__dict__["event"], attr)
         if val.array.typecode in ("h", "H", "i", "I"):
             return val[0]
@@ -18,7 +19,7 @@ class event_wrapper(object):
         setattr(self.__dict__["event"], attr, val)
 
 ##__________________________________________________________________||
-class tree_wrapper(object):
+class TreeWrapper(object):
     def set_event(self, event):
         self.event = event
 
@@ -34,19 +35,20 @@ class tree_wrapper(object):
             getattr(self, name)[:] = [val]
 
 ##__________________________________________________________________||
-class nanoaodtools_module_wrapper(object):
-    def __init__(self, *args, **kwargs):
-        self.nanoaod_tools_module = jecUncertProducer(*args, **kwargs)
-        self.tree = tree_wrapper()
+class NanoaodtoolsModuleWrapper(object):
+    def __init__(self, module_path, module_name, *args, **kwargs):
+        nanoaodtools_module = importlib.import_module(module_path)
+        self.nanoaodtools_module = getattr(nanoaodtools_module, module_name)(*args, **kwargs)
+        self.tree = TreeWrapper()
 
     def begin(self, event):
         self.tree.set_event(event)
-        self.nanoaod_tools_module.beginFile(None, None, None, self.tree)
-        self.nanoaod_tools_module.beginJob()
-        self.wrapped_event = event_wrapper(event)
+        self.nanoaodtools_module.beginFile(None, None, None, self.tree)
+        self.nanoaodtools_module.beginJob()
+        self.wrapped_event = EventWrapper(event)
 
     def event(self, event):
         self.tree.set_event(event)
-        self.nanoaod_tools_module.analyze(self.wrapped_event)
+        self.nanoaodtools_module.analyze(self.wrapped_event)
 
 ##__________________________________________________________________||
