@@ -61,7 +61,7 @@ FAST_build_path(){
 }
 
 FAST_build_python_path(){
-  local Dirs=( "${FAST_RA1_ROOT}" "${FAST_RA1_EXTERNALS_DIR}"/{alphatwirl,alphatwirl-interface,nanoAOD-tools/python,aggregate,pip/lib/python2.7/site-packages} )
+  local Dirs=( "${FAST_RA1_ROOT}" "${FAST_RA1_EXTERNALS_DIR}"/{alphatwirl,alphatwirl-interface,scribblers,nanoAOD-tools/python,aggregate,pip/lib/python2.7/site-packages} )
   Dirs+=( {"$Fast_cvmfs_PythonDir","$Fast_cvmfs_PipDir"}/lib/python2.7/site-packages/)
 
   FAST_build_some_path "$PYTHONPATH" "${Dirs[@]}"
@@ -69,6 +69,7 @@ FAST_build_python_path(){
 
 export PYTHONPATH="$(FAST_build_python_path)"
 export PATH="$(FAST_build_path)"
+export CMSSW_BASE="../../externals/nanoAOD-tools"
 
 # Special treatment needed for setuptools
 python -m pip install --prefix "${FAST_RA1_EXTERNALS_DIR}"/pip -U setuptools
