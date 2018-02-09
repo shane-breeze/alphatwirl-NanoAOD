@@ -5,11 +5,10 @@ Define the cut flow for the pseudo-RA1 analysis
 import os
 from alphatwirl_interface.cut_flows import cut_flow_with_counter
 
-baseline_selection = dict(All = (
-        'ev: ev.inCertifiedLumiSections[0]',
-        #'ev: ev.nJet[0] >= 1',
-        #'ev: ev.Jet_pt[0] >= 100.',
-    ))
+baseline_selection = dict(Any = (
+    dict(All = ('ev: ev.isdata[0]', 'ev: ev.inCertifiedLumiSections[0]')),
+    dict(All = ('ev: not ev.isdata[0]',)),
+))
 
 def cut_flow(output_directory=None, cut_flow_filename="cut_flow_table.txt"):
     '''
