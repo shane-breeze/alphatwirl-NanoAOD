@@ -3,6 +3,8 @@ import shlex
 import os
 import pandas as pd
 
+from xsdb_query import xsdb_query
+
 pd.set_option('display.max_colwidth', -1)
 
 DASGOCLIENT_TEMPALTE = 'dasgoclient --query "{command} dataset={dataset} instance={instance}" --limit 0'
@@ -58,6 +60,9 @@ def main(dataset_query, out_file=None, instance="prod/global"):
             })
 
     df = pd.DataFrame(data, columns=["eventtype", "dataset", "era", "nevents", "nfiles", "files"])
+    mc_attrs = ["mtrx_gen","shower","cross_section","accuracy"]
+    df = xsdb_query(df,attrs=mc_attrs) # Add NANs to data / non-existent xsdb queries
+    df = df[["eventtype","dataset","era","nevents","nfiles"]+mc_attrs+["files"]]
 
     if out_file is not None:
         if os.path.exists(out_file):
