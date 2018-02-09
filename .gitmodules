@@ -10,3 +10,6 @@
 [submodule "externals/scribblers"]
 	path = externals/scribblers
 	url = git@github.com:alphatwirl/scribblers.git
+[submodule "externals/xsecdb"]
+	path = externals/xsecdb
+	url = git@github.com:cms-sw/xsecdb.git
