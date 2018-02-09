@@ -32,7 +32,7 @@ def query_dataset(dataset, instance):
 
     return summary, files
 
-def main(dataset_query, out_file=None, instance="prod/global"):
+def main(dataset_query, out_file=None, instance="prod/global", do_xsdb_query=False):
     dataset_command = DASGOCLIENT_TEMPALTE.format(
             command="dataset",
             dataset=dataset_query,
@@ -61,15 +61,18 @@ def main(dataset_query, out_file=None, instance="prod/global"):
 
     df = pd.DataFrame(data, columns=["eventtype", "dataset", "era", "nevents", "nfiles", "files"])
     mc_attrs = ["mtrx_gen","shower","cross_section","accuracy"]
-    df = xsdb_query(df,attrs=mc_attrs) # Add NANs to data / non-existent xsdb queries
-    df = df[["eventtype","dataset","era","nevents","nfiles"]+mc_attrs+["files"]]
+    if do_xsdb_query:
+        df = xsdb_query(df,attrs=mc_attrs) # Add NANs to data / non-existent xsdb queries
+        df = df[["eventtype","dataset","era","nevents","nfiles"]+mc_attrs+["files"]]
 
     if out_file is not None:
         if os.path.exists(out_file):
-            df_existing = pd.read_csv(out_file,sep='\t',index_col=0,comment='#')
+            df_existing = pd.read_table(out_file,sep='\s+',comment='#')
             df_existing["files"] = df_existing["files"].apply(eval)
             df = pd.concat([df_existing, df]).reset_index(drop=True)
-        df.to_csv(out_file,sep='\t')
+        with open(out_file,'w') as f:
+            df.update(df[["files"]].applymap('"{}"'.format))
+            f.write(df.to_string())
     return df
 
 if __name__ == "__main__":

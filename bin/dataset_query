@@ -9,6 +9,8 @@ import alphatwirl_nanoaod.generate_inputs.dataset_query as dq
         help="The path to an output file. If it already exists, will append to this file.")
 @click.option("-i", "--instance", default="prod/global",
         help="Instance to be passed to the dasgoclient query")
+@click.option("--do-xsdb-query", is_flag=True, default=True,
+        help="Query XSDB for XS")
 
 def main(**kwargs):
     """Generate the dataframe with the dataset info"""
