@@ -44,9 +44,9 @@ def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//"
                             n_processes=ncores)
 
     # Choose components
-    components_df = pd.read_table(components,sep='\t',index_col=0,comment='#')
-    components_df["files"] = components_df["files"].apply(
-            lambda fs: [f if "/store/"!=f[:7] else xrd_redirector+f for f in eval(fs)]
+    components_df = pd.read_table(components,sep='\s+',comment='#')
+    components_df["files"] = components_df["files"].apply(lambda fs:
+            [f if "/store/"!=f[:7] else xrd_redirector+f for f in eval(fs)]
             )
 
     # Setup scribblers
