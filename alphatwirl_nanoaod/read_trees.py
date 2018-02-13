@@ -6,6 +6,7 @@ from alphatwirl_interface.nanoaod.runners import  build_job_manager
 from cut_flow import cut_flow
 from make_scribblers import make_scribblers
 from df_builder import prepare_dataframe_configs
+from save_tree import SaveTree
 
 import os
 import pprint
@@ -44,6 +45,8 @@ def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//"
                             n_processes=ncores)
 
     # Choose components
+    if not os.path.exists(components):
+        raise IOError("File {} does not exist".format(components))
     components_df = pd.read_table(components,sep='\s+',comment='#')
     components_df["files"] = components_df["files"].apply(lambda fs:
             [f if "/store/"!=f[:7] else xrd_redirector+f for f in eval(fs)]
@@ -66,7 +69,7 @@ def main(out_dir, mode, components, xrd_redirector="root://xrootd-cms.infn.it//"
     print "Number of objects created:",len(dataframes)
     for df in dataframes:
         print type(df)
-        pprint.pprint(df)
+        #pprint.pprint(df)
 
 
 def summarize(out_dir, mgr, df_cfg, event_selection, scribblers, components_df):
@@ -83,9 +86,11 @@ def summarize(out_dir, mgr, df_cfg, event_selection, scribblers, components_df):
     '''
 
     reader_collector_pairs = [(s,NullCollector()) for s in scribblers] + event_selection
+
+    reader_collector_pairs += [(SaveTree(out_dir),NullCollector())]
+
     name_composer = WithInsertTableFileNameComposer(TableFileNameComposer(),
                                                     df_cfg.keys())
-
     # setting up defaults to complete the provided DF configs
     tableConfigCompleter = TableConfigCompleter(
         # using a composer to create a predictable output file name
@@ -95,5 +100,10 @@ def summarize(out_dir, mgr, df_cfg, event_selection, scribblers, components_df):
     )
     # combine configs and completers
     reader_collector_pairs += complete(df_cfg.values(), tableConfigCompleter)
+
+    print "Components:"
+    for d,e in zip(components_df["dataset"],components_df["era"]):
+        print "\t{}_{}".format(d,e)
+    print
 
     return mgr.run(reader_collector_pairs, components=components_df)
