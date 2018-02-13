@@ -69,7 +69,6 @@ FAST_build_python_path(){
 
 export PYTHONPATH="$(FAST_build_python_path)"
 export PATH="$(FAST_build_path)"
-export CMSSW_BASE="../../externals/nanoAOD-tools"
 
 # Special treatment needed for setuptools
 python -m pip install --prefix "${FAST_RA1_EXTERNALS_DIR}"/pip -U setuptools
