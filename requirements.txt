@@ -5,4 +5,5 @@ Pandas>=0.21
 pyyaml
 pathlib2
 matplotlib
+rootpy
 memory_profiler
