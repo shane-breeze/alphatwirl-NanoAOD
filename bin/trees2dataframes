@@ -3,6 +3,9 @@ import os
 import click
 import alphatwirl_nanoaod.read_trees as t2df
 
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
 @click.command()
 @click.option("-o", "--out_dir", default=os.path.join(os.getcwd(), "output"),
         help="The path to an output directory, which should exist")
