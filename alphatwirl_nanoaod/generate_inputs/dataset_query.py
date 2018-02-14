@@ -43,6 +43,7 @@ def main(dataset_query, out_file=None, instance="prod/global", do_xsdb_query=Fal
 
     data = []
     for dataset in datasets:
+        print dataset
         dataset_name, era, tier = dataset.split("/")[1:]
         event_type = "MC" if "SIM" in tier else "Data"
         summary, files = query_dataset(dataset, instance)
