@@ -9,16 +9,37 @@ mc_selection = dict(All = (
     'ev: not ev.isdata[0]',
 ))
 
+met_trigger = dict(Any = (
+    'ev: ev.HLT_PFMETNoMu90_PFMHTNoMu90_IDTight[0]',
+    'ev: ev.HLT_PFMETNoMu100_PFMHTNoMu100_IDTight[0]',
+    'ev: ev.HLT_PFMETNoMu110_PFMHTNoMu110_IDTight[0]',
+    'ev: ev.HLT_PFMETNoMu120_PFMHTNoMu120_IDTight[0]',
+))
+muon_trigger = dict(Any = (
+    'ev: ev.HLT_IsoMu24[0]',
+    'ev: ev.HLT_IsoTkMu24[0]',
+))
+electron_trigger = dict(Any = (
+    'ev: ev.HLT_Ele27_eta2p1_WPLoose_Gsf[0]',
+))
+trigger_selection = dict(Any = (
+    dict(All = ("ev: 'MET' in ev.comp_name", met_trigger)),
+    dict(All = ("ev: 'SingleMuon' in ev.comp_name", muon_trigger)),
+    dict(All = ("ev: 'SingleElectron' in ev.comp_name", electron_trigger)),
+))
+
 data_selection = dict(All = (
     'ev: ev.isdata[0]',
     'ev: ev.inCertifiedLumiSections[0]',
+    trigger_selection,
 ))
 
-baseline_selection = dict(All= (
-    dict(All = (
-        'ev: ev.nJet[0] > 0',
-        'ev: ev.Jet_pt[0] > 200.',
-    )),
+baseline_selection = dict(All = (
+    'ev: ev.cutflowId[0] >= 0', # Mu, Ele, Pho selection
+    'ev: len(ev.JetSelection) > 0', # Require at least 1 selected jet
+    'ev: len(ev.JetVeto) == len(ev.JetSelection)', # Veto fwd jets
+    'ev: ev.JetSelection[0].pt > 100.', # Lead jet pT > 100
+    'ev: ev.METNoX_pt[0] > 200.', # MET no X cut
     dict(Any = (
         mc_selection,
         data_selection,
