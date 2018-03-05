@@ -1,0 +1,38 @@
+#!/usr/bin/env python
+import os
+import click
+import alphatwirl_nanoaod.read_trees as t2df
+
+import ROOT
+ROOT.gROOT.SetBatch(True)
+
+@click.command()
+@click.option("-o", "--out_dir", default=os.path.join(os.getcwd(), "output"),
+        help="The path to an output directory, which should exist")
+@click.option("-n", "--events-per-dataset", default=-1, type=int,
+        help="Limit the number of events per dataset")
+@click.option("-N", "--events-per-process", default=-1, type=int,
+        help="Limit the number of events per process (condor job)")
+@click.option("--n-files", default=1, type=int,
+        help="Number of files per run")
+@click.option('--components', default="data/components2016.csv",
+        help="Select which components dataframe (in text file format) to read.")
+@click.option('--xrd-redirector', default="root://xrootd-cms.infn.it//",
+        help="xrootd redirector to use if the file path starts with /store/")
+@click.option('--mode', default="multiprocessing",
+        help="Choose which parallel mode to run in")
+@click.option('--ncores', default=4,
+        help="Choose the number of cores to run on in multiprocessing mode")
+@click.option('--quiet/--loud', default=False,
+        help="Progress bar? Default is to have one")
+
+def main(**kwargs):
+    """
+    Produce binned dataframes summarizing either data or MC components.
+    Makes the first set of dataframes for the analysis chain.
+    """
+
+    t2df.main(**kwargs)
+
+if __name__ == "__main__":
+    main()

@@ -4,3 +4,12 @@
 [submodule "externals/alphatwirl"]
 	path = externals/alphatwirl
 	url = git@github.com:alphatwirl/alphatwirl.git
+[submodule "externals/alphatwirl-interface"]
+	path = externals/alphatwirl-interface
+	url = git@github.com:alphatwirl/alphatwirl-interface.git
+[submodule "externals/scribblers"]
+	path = externals/scribblers
+	url = git@github.com:alphatwirl/scribblers.git
+[submodule "externals/xsecdb"]
+	path = externals/xsecdb
+	url = git@github.com:cms-sw/xsecdb.git
